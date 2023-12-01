@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:screen_project/screens/home/widget/popularItem.dart';
+import '../../../models/bestsell.dart';
 import '../../../models/coffee.dart';
 import 'favouriteprovider.dart';
-import 'coffees_item.dart'; // Assuming you've named your item widget as CoffeesItem
+import 'favouriteprovider2.dart';
+import 'coffees_item.dart';
 
 class FavouriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
-    List<Coffees> favoriteItems = favoritesProvider.favorites.toList();
+    final favoritesProvider2 = Provider.of<FavoritesProvider2>(context);
+
+    List<Coffees> coffeeFavorites = favoritesProvider.favorites.toList();
+    List<BestSellers> bestSellersFavorites = favoritesProvider2.favorites.toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Favourite items'),
       ),
-      body: favoriteItems.isEmpty
+      body: (coffeeFavorites.isEmpty && bestSellersFavorites.isEmpty)
           ? Center(
         child: Text('No favorite items yet.'),
       )
           : ListView.builder(
-        itemCount: favoriteItems.length,
+        itemCount: coffeeFavorites.length + bestSellersFavorites.length,
         itemBuilder: (context, index) {
-          return CoffeesItem(favoriteItems[index]);
+          if (index < coffeeFavorites.length) {
+            return CoffeesItem(coffeeFavorites[index]);
+          } else {
+            BestSellers bestSellers =
+            bestSellersFavorites[index - coffeeFavorites.length];
+            return PopularItem(bestSellers);
+          }
         },
       ),
     );

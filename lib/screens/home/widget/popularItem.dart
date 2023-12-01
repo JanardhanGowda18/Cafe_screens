@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:screen_project/models/bestsell.dart';
 import 'package:screen_project/screens/detail/detail1.dart';
+import 'favouriteprovider2.dart';
 
 class PopularItem extends StatefulWidget {
   final BestSellers bestSellers;
@@ -12,10 +14,11 @@ class PopularItem extends StatefulWidget {
 }
 
 class _PopularItemState extends State<PopularItem> {
-  bool isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
+    final favoritesProvider2 = Provider.of<FavoritesProvider2>(context);
+    bool isFavorite = favoritesProvider2.favorites.contains(widget.bestSellers);
+
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -25,59 +28,60 @@ class _PopularItemState extends State<PopularItem> {
             ),
           );
         },
-        child: SingleChildScrollView( // Wrap the entire card with SingleChildScrollView
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Stack(
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(8),
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(widget.bestSellers.imageUrl),
-                          fit: BoxFit.cover,
+                    Hero(
+                      tag: 'bestSellersImage${widget.bestSellers.title}', // Use the title as the tag
+                      child: Container(
+                        margin: EdgeInsets.all(8),
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(widget.bestSellers.imageUrl),
+                            // fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                     Positioned(
                       right: 20,
                       top: 15,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            // Toggle the favorite status globally
+                            favoritesProvider2.toggleFavorite(widget.bestSellers);
+                          },
                           child: Icon(
-                            Icons.favorite,
+                            isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.red,
                             size: 15,
-                            color: isFavorite ? Colors.red : Colors.grey,
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
                 Text(
                   widget.bestSellers.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    height: 2.5,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
                 ),
               ],
             ),

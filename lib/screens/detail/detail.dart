@@ -1,60 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../home/widget/favouriteprovider.dart';
+import 'detail1.dart';
 import 'package:screen_project/models/coffee.dart';
-import 'package:screen_project/screens/detail/widget/detail_app_bar.dart';
-
-class QuantityButton extends StatelessWidget {
-  final int quantity;
-  final Function() onIncrement;
-  final Function() onDecrement;
-
-  QuantityButton({
-    required this.quantity,
-    required this.onIncrement,
-    required this.onDecrement,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ElevatedButton(
-
-          onPressed: onDecrement,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.brown,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            onPrimary: Colors.white,
-          ),
-          child: Icon(Icons.remove),
-        ),
-        SizedBox(width: 16),
-        Text(
-          '$quantity',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(width: 16),
-        ElevatedButton(
-          onPressed: onIncrement,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.brown,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            onPrimary: Colors.white,
-          ),
-          child: Icon(Icons.add),
-        ),
-      ],
-    );
-  }
-}
 
 class DetailPage extends StatefulWidget {
   final Coffees coffees;
@@ -70,6 +18,9 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
+    bool isFavorite = favoritesProvider.favorites.contains(widget.coffees);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -78,7 +29,21 @@ class _DetailPageState extends State<DetailPage> {
             Navigator.pop(context);
           },
         ),
-
+        actions: [
+          IconButton(
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              // Toggle the favorite status locally
+              favoritesProvider.toggleFavorite(widget.coffees);
+              setState(() {
+                isFavorite = !isFavorite;
+              });
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -95,18 +60,23 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 10.0, right: 10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image.asset(
-                  widget.coffees.imageUrl,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              child: Hero(
+                tag: 'coffeeImage${widget.coffees.title}', // Make sure to use the same tag as in CoffeesItem
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset(
+                    widget.coffees.imageUrl,
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
+            // Display Title and Price
             Padding(
               padding: const EdgeInsets.all(9.0),
               child: Row(
@@ -114,7 +84,7 @@ class _DetailPageState extends State<DetailPage> {
                   Expanded(
                     child: Text(
                       widget.coffees.title,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black), // Set color for the product title
                     ),
                   ),
                   Expanded(
@@ -122,7 +92,8 @@ class _DetailPageState extends State<DetailPage> {
                       widget.coffees.price,
                       style: TextStyle(
                         fontSize: 18,
-                        color: Colors.red,                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.end,
                     ),
@@ -130,6 +101,7 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
             ),
+            // Display Ingredients
             // Display Ingredients
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -166,16 +138,17 @@ class _DetailPageState extends State<DetailPage> {
                       });
                     },
                   ),
+                  // Add to Cart Button
                   ElevatedButton(
                     onPressed: () {
-
+                      // Implement your add to cart functionality here
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
+                      onPrimary: Colors.white, // Set text color for the button
                     ),
                     child: Text(
                       'Add to Cart',
@@ -190,6 +163,38 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class QuantityButton extends StatelessWidget {
+  final int quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+
+  QuantityButton({
+    required this.quantity,
+    required this.onIncrement,
+    required this.onDecrement,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: onDecrement,
+        ),
+        Text(
+          '$quantity',
+          style: TextStyle(fontSize: 18),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: onIncrement,
+        ),
+      ],
     );
   }
 }

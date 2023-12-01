@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:screen_project/screens/detail/widget/detail_app_bar.dart';
+
 import '../../models/bestsell.dart';
+import '../home/widget/favouriteprovider2.dart';
 
 class QuantityButton extends StatelessWidget {
   final int quantity;
@@ -24,7 +28,7 @@ class QuantityButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white,
+            onPrimary: Colors.white, // Set text color for the button
           ),
           child: Icon(Icons.remove),
         ),
@@ -34,7 +38,7 @@ class QuantityButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.black, // Set color for the middle number
           ),
         ),
         SizedBox(width: 16),
@@ -45,7 +49,7 @@ class QuantityButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white,
+            onPrimary: Colors.white, // Set text color for the button
           ),
           child: Icon(Icons.add),
         ),
@@ -54,7 +58,7 @@ class QuantityButton extends StatelessWidget {
   }
 }
 
-// DetailPage Widget
+// DetailPage1 Widget
 class DetailPage1 extends StatefulWidget {
   final BestSellers bestSellers;
 
@@ -69,15 +73,34 @@ class _DetailPage1State extends State<DetailPage1> {
 
   @override
   Widget build(BuildContext context) {
+    final favoritesProvider2 = Provider.of<FavoritesProvider2>(context);
+    bool isFavorite = favoritesProvider2.favorites.contains(widget.bestSellers);
+
     return Scaffold(
       appBar: AppBar(
+        // Add the back button to the app bar
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
+            // Navigate back when the back button is pressed
             Navigator.pop(context);
           },
         ),
-
+        actions: [
+          IconButton(
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              // Toggle the favorite status locally
+              favoritesProvider2.toggleFavorite(widget.bestSellers);
+              setState(() {
+                isFavorite = !isFavorite;
+              });
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -91,23 +114,27 @@ class _DetailPage1State extends State<DetailPage1> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.black, // Set color for the "Product Details" text
                 ),
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 10.0, right: 10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image.asset(
-                  widget.bestSellers.imageUrl,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              child: Hero(
+                tag: 'bestSellersImage${widget.bestSellers.title}', // Use the title as the tag
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image.asset(
+                    widget.bestSellers.imageUrl,
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-            // Display Title and Price
+
             Padding(
               padding: const EdgeInsets.all(9.0),
               child: Row(
@@ -115,7 +142,7 @@ class _DetailPage1State extends State<DetailPage1> {
                   Expanded(
                     child: Text(
                       widget.bestSellers.title,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black), // Set color for the product title
                     ),
                   ),
                   Expanded(
@@ -123,7 +150,7 @@ class _DetailPage1State extends State<DetailPage1> {
                       widget.bestSellers.price,
                       style: TextStyle(
                         fontSize: 18,
-                        color: Colors.red,
+                        color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.end,
@@ -132,7 +159,7 @@ class _DetailPage1State extends State<DetailPage1> {
                 ],
               ),
             ),
-            // Display Ingredients
+
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
@@ -154,6 +181,7 @@ class _DetailPage1State extends State<DetailPage1> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Quantity
                   QuantityButton(
                     quantity: quantity,
                     onIncrement: () {
@@ -170,14 +198,14 @@ class _DetailPage1State extends State<DetailPage1> {
                   // Add to Cart Button
                   ElevatedButton(
                     onPressed: () {
-
+                      // Implement your add to cart functionality here
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
+                      onPrimary: Colors.white, // Set text color for the button
                     ),
                     child: Text(
                       'Add to Cart',

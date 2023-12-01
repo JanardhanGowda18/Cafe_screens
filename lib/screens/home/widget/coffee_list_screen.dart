@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:screen_project/models/coffee.dart';
 import 'coffees_item.dart';
+import 'favouriteprovider.dart';
 
 class CoffeeListScreen extends StatelessWidget {
   @override
@@ -9,16 +11,28 @@ class CoffeeListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('All Coffees'),
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Set the number of items in each row
-          crossAxisSpacing: 8.0, // Set the horizontal spacing between items
-          mainAxisSpacing: 8.0, // Set the vertical spacing between items
-        ),
-        itemCount: Coffees.generateCoffees().length,
-        itemBuilder: (context, index) {
-          final coffee = Coffees.generateCoffees()[index];
-          return CoffeesItem(coffee);
+      body: Consumer<FavoritesProvider>(
+        builder: (context, favoritesProvider, child) {
+          final List<Coffees> coffeesList = Coffees.generateCoffees();
+
+          // Filter coffees based on selected category
+          List<Coffees> filteredCoffees = favoritesProvider.selectedCategory == 'all'
+              ? coffeesList
+              : coffeesList
+              .where((coffee) => coffee.subtitle == favoritesProvider.selectedCategory)
+              .toList();
+
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+            ),
+            itemCount: filteredCoffees.length,
+            itemBuilder: (context, index) {
+              return CoffeesItem(filteredCoffees[index]);
+            },
+          );
         },
       ),
     );

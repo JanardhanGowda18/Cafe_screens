@@ -13,7 +13,7 @@ class Popular extends StatelessWidget{
         children: [
           Bestselling(title: 'Popular Coffee'),
           Container(
-            height: 230,
+            height: 210,
             child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 scrollDirection: Axis.horizontal,

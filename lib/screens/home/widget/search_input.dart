@@ -15,7 +15,6 @@ class SearchInput extends StatefulWidget {
 class _SearchInputState extends State<SearchInput> {
   List<Coffees> filteredCoffees = [];
   bool isSearching = false;
-  bool isFiltering = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,37 +51,45 @@ class _SearchInputState extends State<SearchInput> {
                     ),
                     prefixIcon: Container(
                       padding: EdgeInsets.all(10),
-                      child: Image.asset('assets/icons/search.png', width: 20),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (filteredCoffees.isNotEmpty) {
+                            widget.onItemClicked(filteredCoffees.first);
+                          }
+                        },
+                        child: Image.asset('assets/icons/search.png', width: 20),
+                      ),
                     ),
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isFiltering = !isFiltering;
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.only(top: 10),
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: isFiltering ? Colors.red : Colors.black,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Image.asset(
-                    'assets/icons/filter.png',
-                    width: 25,
-                  ),
-                ),
-              ),
+              // Remove the GestureDetector and Container below
+              // GestureDetector(
+              //   onTap: () {
+              //     // if (filteredCoffees.isNotEmpty) {
+              //     //   widget.onItemClicked(filteredCoffees.first);
+              //     // }
+              //   },
+              //   child: Container(
+              //     margin: EdgeInsets.only(top: 10),
+              //     padding: EdgeInsets.all(15),
+              //     decoration: BoxDecoration(
+              //       color: Theme.of(context).primaryColor,
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //     child: Image.asset(
+              //       'assets/icons/filter.png',
+              //       width: 25,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
-          if (isSearching || isFiltering)
+          if (isSearching)
             Align(
               alignment: Alignment.topLeft,
               child: Column(
-                children: (isSearching ? filteredCoffees : widget.coffeesList)
+                children: filteredCoffees
                     .map(
                       (coffee) => InkWell(
                     onTap: () {
@@ -94,11 +101,11 @@ class _SearchInputState extends State<SearchInput> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
-                      ),
+                      ), // Use Colors.white here
                       child: Text(
                         coffee.title,
                         style: TextStyle(color: Colors.black),
-                      ),
+                      ), // Text color
                     ),
                   ),
                 )

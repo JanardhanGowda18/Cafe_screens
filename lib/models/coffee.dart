@@ -14,8 +14,8 @@ class Coffees {
     return [
       Coffees(
         title: 'Espresso',
-        subtitle: 'Morning Bliss',
-        price: '\$7.50',
+        subtitle: 'coffee',
+        price: '\₹ 207.50',
         ingredients: 'Tea Leaves, Water, Milk (Optional), Sweetener (Optional)',
         imageUrl: 'assets/images/Cappuccino.jpg',
         detailUrl: ['assets/images/arrival1.png', 'assets/images/detail2.png'],
@@ -24,8 +24,8 @@ class Coffees {
 
       Coffees(
         title: 'Americano',
-        subtitle: 'Pure Intensity',
-        price: '\$10.00',
+        subtitle: 'coffee',
+        price: '\₹  210.00',
         ingredients: 'Coffee Beans, Water',
         imageUrl: 'assets/images/Americano.jpg',
         detailUrl: ['assets/images/arrival2.png', 'assets/images/best1.png'],
@@ -35,8 +35,8 @@ class Coffees {
 
       Coffees(
         title: 'Latte',
-        subtitle: 'Elegant Fusion',
-        price: '\$10.00',
+        subtitle: 'coffee',
+        price: '\₹  160.00',
         ingredients: 'Coffee Beans, Rose Petals, Milk or Cream, Sweetener (Optional)',
         imageUrl: 'assets/images/Latte.jpg',
         detailUrl: ['assets/images/best1.png', 'assets/images/detail2.png'],
@@ -46,8 +46,8 @@ class Coffees {
 
       Coffees(
           title: 'Cappuccino',
-          subtitle: 'Nutty Indulgence',
-          price: '\$10.00',
+        subtitle: 'coffee',
+          price: '\₹ 190.00',
           ingredients: 'Coffee Beans, Badam (Almond) Extract, Milk or Cream, Sweetener (Optional)',
           imageUrl: 'assets/images/Cappuccino.jpg',
           detailUrl: ['assets/images/detail2.png', 'assets/images/detail3.png'],
@@ -56,8 +56,8 @@ class Coffees {
 
       Coffees(
         title: 'Mocha',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        subtitle: 'coffee',
+        price: '\₹ 199.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Mocha.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],
@@ -65,8 +65,8 @@ class Coffees {
       ),
       Coffees(
         title: 'Black Tea',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        subtitle: 'tea',
+        price: '\₹  89.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Black Tea.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],
@@ -75,8 +75,8 @@ class Coffees {
 
       Coffees(
         title: 'Green Tea',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        subtitle: 'tea',
+        price: '\₹ 109.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Green Tea.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],
@@ -84,8 +84,8 @@ class Coffees {
     ),
       Coffees(
         title: 'Herbal Tea',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        subtitle: 'tea',
+        price: '\₹ 209.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Herbal Tea.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],
@@ -94,17 +94,16 @@ class Coffees {
 
       Coffees(
         title: 'Chai',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        subtitle: 'tea',
+        price: '\₹  110.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Chai.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],
           description: 'Chai is a type of tea that is made from black tea, spices, and milk or cream. Chai has a strong, spicy flavor. ',
       ),
           Coffees(
-        title: 'Iced Tea',
-        subtitle: 'Timeless Elegance',
-        price: '\$9.00',
+        title: 'Iced Tea', subtitle: 'tea',
+        price: '\₹ 209.00',
         ingredients: 'Tea Leaves, Water, Milk or Cream, Lemon, Spices',
         imageUrl: 'assets/images/Iced tea.jpg',
         detailUrl: ['assets/images/detail3.png', 'assets/images/arrival1.png'],

@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:screen_project/screens/home/home.dart';
+import 'package:screen_project/screens/home/widget/favouriteprovider.dart';
+import 'package:screen_project/screens/home/widget/favouriteprovider2.dart';
 
-
-void main(){
-  runApp(const MyApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => FavoritesProvider()),
+        ChangeNotifierProvider(create: (context) => FavoritesProvider2()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget{
-  const MyApp({super.key});
 
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: Colors.transparent)
-);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'COFFEE SHOP',

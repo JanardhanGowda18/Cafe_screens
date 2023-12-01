@@ -11,9 +11,9 @@ class BestSellListScreen extends StatelessWidget {
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Set the number of items in each row
-          crossAxisSpacing: 10.0, // Set the horizontal spacing between items
-          mainAxisSpacing: 10.0, // Set the vertical spacing between items
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
         ),
         itemCount: BestSellers.generateBestSellers().length,
         itemBuilder: (context, index) {
