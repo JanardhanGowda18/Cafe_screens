@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../home/widget/cart_item_provider.dart';
+import '../home/widget/checkoutpage.dart';
 import '../home/widget/favouriteprovider.dart';
-import 'detail1.dart';
 import 'package:screen_project/models/coffee.dart';
 
 class DetailPage extends StatefulWidget {
@@ -36,7 +37,6 @@ class _DetailPageState extends State<DetailPage> {
               color: Colors.red,
             ),
             onPressed: () {
-              // Toggle the favorite status locally
               favoritesProvider.toggleFavorite(widget.coffees);
               setState(() {
                 isFavorite = !isFavorite;
@@ -64,7 +64,7 @@ class _DetailPageState extends State<DetailPage> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 10.0, right: 10.0),
               child: Hero(
-                tag: 'coffeeImage${widget.coffees.title}', // Make sure to use the same tag as in CoffeesItem
+                tag: 'coffeeImage${widget.coffees.title}',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: Image.asset(
@@ -84,7 +84,7 @@ class _DetailPageState extends State<DetailPage> {
                   Expanded(
                     child: Text(
                       widget.coffees.title,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black), // Set color for the product title
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                   ),
                   Expanded(
@@ -101,8 +101,6 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
             ),
-            // Display Ingredients
-            // Display Ingredients
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
@@ -110,7 +108,6 @@ class _DetailPageState extends State<DetailPage> {
                 style: TextStyle(fontSize: 16),
               ),
             ),
-            // Display Description
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
@@ -138,17 +135,31 @@ class _DetailPageState extends State<DetailPage> {
                       });
                     },
                   ),
-                  // Add to Cart Button
                   ElevatedButton(
                     onPressed: () {
-                      // Implement your add to cart functionality here
+                      List<CartItem> cartItems = Provider.of<CartItemProvider>(context, listen: false).cartItems;
+                      CartItem newItem = CartItem(
+                        productImageUrl: widget.coffees.imageUrl,
+                        productName: widget.coffees.title,
+                        productPrice: widget.coffees.price,
+
+                        productQuantity: quantity,
+                      );
+
+                      Provider.of<CartItemProvider>(context, listen: false).addToCart(newItem);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckoutPage(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white, // Set text color for the button
+                      onPrimary: Colors.white,
                     ),
                     child: Text(
                       'Add to Cart',

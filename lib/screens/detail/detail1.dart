@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:screen_project/screens/detail/widget/detail_app_bar.dart';
-
 import '../../models/bestsell.dart';
+import '../home/widget/cart_item_provider.dart';
+import '../home/widget/checkoutpage.dart';
 import '../home/widget/favouriteprovider2.dart';
 
 class QuantityButton extends StatelessWidget {
@@ -198,7 +198,22 @@ class _DetailPage1State extends State<DetailPage1> {
                   // Add to Cart Button
                   ElevatedButton(
                     onPressed: () {
-                      // Implement your add to cart functionality here
+                      List<CartItem> cartItems = Provider.of<CartItemProvider>(context, listen: false).cartItems;
+                      CartItem newItem = CartItem(
+                        productImageUrl: widget.bestSellers.imageUrl,
+                        productName: widget.bestSellers.title,
+                        productPrice: widget.bestSellers.price,
+
+                        productQuantity: quantity,
+                      );
+
+                      Provider.of<CartItemProvider>(context, listen: false).addToCart(newItem);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckoutPage(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.brown,
