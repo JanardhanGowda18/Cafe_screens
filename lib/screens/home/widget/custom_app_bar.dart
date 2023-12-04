@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'cart_item_provider.dart';
+import 'checkoutpage.dart';
 
 class CustomAppBar extends StatefulWidget {
   const CustomAppBar({Key? key}) : super(key: key);
@@ -42,7 +45,7 @@ class _CustomAppBarState extends State<CustomAppBar>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16), // Add a SizedBox for spacing
+          SizedBox(height: 16),
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -67,40 +70,64 @@ class _CustomAppBarState extends State<CustomAppBar>
                           ],
                         ),
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 0.1,
-                                  offset: const Offset(0, 1),
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to the login page when the icon is clicked
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CheckoutPage()),
+                          );
+                        },
+                        child: Consumer<CartItemProvider>(
+                          builder: (context, cartItemProvider, child) {
+                            int cartItemCount = cartItemProvider.cartItems.length;
+
+                            return Stack(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 0.1,
+                                        blurRadius: 0.1,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.shopping_cart,
+                                    color: Colors.black,
+                                  ),
                                 ),
+                                if (cartItemCount > 0)
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.brown,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          cartItemCount.toString(),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                               ],
-                            ),
-                            child: const Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Positioned(
-                            right: 10,
-                            top: 10,
-                            child: Container(
-                              height: 10,
-                              width: 10,
-                              decoration: BoxDecoration(
-                                color: Colors.brown,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

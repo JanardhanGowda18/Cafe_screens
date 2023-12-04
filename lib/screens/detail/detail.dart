@@ -155,11 +155,11 @@ class _DetailPageState extends State<DetailPage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.brown,
+                      primary: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
+                      onPrimary: Colors.white, // Set text color for the button
                     ),
                     child: Text(
                       'Add to Cart',

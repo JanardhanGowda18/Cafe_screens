@@ -11,8 +11,6 @@ void main() {
       providers: [
 
     ChangeNotifierProvider(create: (context) => CartItemProvider()),
-  // Add other providers as needed
-
         ChangeNotifierProvider(create: (context) => FavoritesProvider()),
         ChangeNotifierProvider(create: (context) => FavoritesProvider2()),
       ],
