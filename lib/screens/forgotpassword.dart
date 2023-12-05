@@ -28,40 +28,50 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Forgot Password',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("images/snack.jpg"),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/snack.jpg"),
+            fit: BoxFit.cover,
           ),
-          child: Center(
+        ),
+        child: Center(
+          child:Padding(
+            padding: const EdgeInsets.only(left: 20,right: 20),
             child: Card(
-              color: Colors.white.withOpacity(0.4),
-              elevation: 8.0,
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(bottom: 16,left: 16,right:16,top:16),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    Icon(
+                      Icons.lock_outline,
+                      size: 80,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(height: 20),
                     Text(
                       'Forgot Password',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: 20),
                     TextField(
                       controller: _newPasswordController,
                       decoration: InputDecoration(
@@ -101,7 +111,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
             ),
-          ),
+          )
+
         ),
       ),
     );

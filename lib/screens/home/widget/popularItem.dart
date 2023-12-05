@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_project/models/bestsell.dart';
 import 'package:screen_project/screens/detail/detail1.dart';
+import 'cart_item_provider.dart';
 import 'favouriteprovider2.dart';
 
 class PopularItem extends StatefulWidget {
@@ -23,8 +24,17 @@ class _PopularItemState extends State<PopularItem> {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DetailPage1(bestSellers: widget.bestSellers),
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  DetailPage1(bestSellers: widget.bestSellers),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+                return SlideTransition(position: offsetAnimation, child: child);
+              },
             ),
           );
         },
@@ -39,7 +49,7 @@ class _PopularItemState extends State<PopularItem> {
                 Stack(
                   children: [
                     Hero(
-                      tag: 'bestSellersImage${widget.bestSellers.title}', // Use the title as the tag
+                      tag: 'bestSellersImage${widget.bestSellers.title}',
                       child: Container(
                         margin: EdgeInsets.all(8),
                         height: 150,
@@ -64,7 +74,6 @@ class _PopularItemState extends State<PopularItem> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            // Toggle the favorite status globally
                             favoritesProvider2.toggleFavorite(widget.bestSellers);
                           },
                           child: Icon(
@@ -82,6 +91,39 @@ class _PopularItemState extends State<PopularItem> {
                 Text(
                   widget.bestSellers.title,
                   style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    CartItem cartItem = CartItem(
+                      productImageUrl: widget.bestSellers.imageUrl,
+                      productName: widget.bestSellers.title,
+                      productPrice: widget.bestSellers.price,
+                      productQuantity: 1,
+                    );
+
+                    Provider.of<CartItemProvider>(context, listen: false).addToCart(cartItem);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Added to Cart'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onPrimary: Colors.white,
+                  ),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),

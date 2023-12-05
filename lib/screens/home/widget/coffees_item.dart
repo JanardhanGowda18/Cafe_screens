@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../detail/detail.dart';
+import 'cart_item_provider.dart';
+import 'checkoutpage.dart';
 import 'favouriteprovider.dart';
 import 'package:screen_project/models/coffee.dart';
 
@@ -17,6 +19,7 @@ class _CoffeesItemState extends State<CoffeesItem> {
   @override
   Widget build(BuildContext context) {
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
+    final cartProvider = Provider.of<CartItemProvider>(context);
     bool isFavorite = favoritesProvider.favorites.contains(widget.coffees);
 
     return Container(
@@ -64,9 +67,7 @@ class _CoffeesItemState extends State<CoffeesItem> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            // Toggle the favorite status globally
-                            favoritesProvider.toggleFavorite(widget.coffees);
-                          },
+                            favoritesProvider.toggleFavorite(widget.coffees, context);                          },
                           child: Icon(
                             isFavorite
                                 ? Icons.favorite
@@ -84,10 +85,6 @@ class _CoffeesItemState extends State<CoffeesItem> {
                   style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
                 ),
                 Text(
-                  widget.coffees.subtitle,
-                  style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
-                ),
-                Text(
                   widget.coffees.price,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
@@ -95,6 +92,39 @@ class _CoffeesItemState extends State<CoffeesItem> {
                     height: 1.5,
                   ),
                 ),
+
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    CartItem cartItem = CartItem(
+                      productImageUrl: widget.coffees.imageUrl,
+                      productName: widget.coffees.title,
+                      productPrice: widget.coffees.price,
+                      productQuantity: 1,
+                    );
+                    cartProvider.addToCart(cartItem);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Added to Cart'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onPrimary: Colors.white,
+                  ),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+
               ],
             ),
           ),

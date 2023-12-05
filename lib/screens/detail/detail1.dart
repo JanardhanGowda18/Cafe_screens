@@ -57,8 +57,6 @@ class QuantityButton extends StatelessWidget {
     );
   }
 }
-
-// DetailPage1 Widget
 class DetailPage1 extends StatefulWidget {
   final BestSellers bestSellers;
 
@@ -93,7 +91,6 @@ class _DetailPage1State extends State<DetailPage1> {
               color: Colors.red,
             ),
             onPressed: () {
-              // Toggle the favorite status locally
               favoritesProvider2.toggleFavorite(widget.bestSellers);
               setState(() {
                 isFavorite = !isFavorite;
@@ -114,7 +111,7 @@ class _DetailPage1State extends State<DetailPage1> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Set color for the "Product Details" text
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -122,7 +119,7 @@ class _DetailPage1State extends State<DetailPage1> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 10.0, right: 10.0),
               child: Hero(
-                tag: 'bestSellersImage${widget.bestSellers.title}', // Use the title as the tag
+                tag: 'bestSellersImage${widget.bestSellers.title}',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: Image.asset(
@@ -175,7 +172,7 @@ class _DetailPage1State extends State<DetailPage1> {
                 style: TextStyle(fontSize: 16),
               ),
             ),
-            SizedBox(height: 106),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -220,7 +217,7 @@ class _DetailPage1State extends State<DetailPage1> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white, // Set text color for the button
+                      onPrimary: Colors.white,
                     ),
                     child: Text(
                       'Add to Cart',

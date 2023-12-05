@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'CategorySelector.dart';
-import 'coffee_list_screen.dart';
 import 'favouriteprovider.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -25,7 +23,7 @@ class CategoryItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: favoritesProvider.selectedCategory == 'all'
-                      ? Theme.of(context).primaryColor // Change color as needed
+                      ? Theme.of(context).primaryColor
                       : Colors.grey,
                 ),
               ),

@@ -10,11 +10,12 @@ class FavoritesProvider extends ChangeNotifier {
 
   String get selectedCategory => _selectedCategory;
 
-  void toggleFavorite(Coffees coffee) {
+  void toggleFavorite(Coffees coffee, BuildContext context) {
     if (_favorites.contains(coffee)) {
       _favorites.remove(coffee);
     } else {
       _favorites.add(coffee);
+      _showSnackBar(context, '${coffee.title} added to Favorites');
     }
     notifyListeners();
   }
@@ -28,8 +29,15 @@ class FavoritesProvider extends ChangeNotifier {
 
   void setDefaultCategory(List<Coffees> coffees) {
     if (coffees.isNotEmpty) {
-      _selectedCategory = coffees.first.subtitle;
+      _selectedCategory = 'all';
     }
   }
-}
 
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}

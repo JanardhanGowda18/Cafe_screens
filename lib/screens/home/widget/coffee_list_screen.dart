@@ -14,8 +14,6 @@ class CoffeeListScreen extends StatelessWidget {
       body: Consumer<FavoritesProvider>(
         builder: (context, favoritesProvider, child) {
           final List<Coffees> coffeesList = Coffees.generateCoffees();
-
-          // Filter coffees based on selected category
           List<Coffees> filteredCoffees = favoritesProvider.selectedCategory == 'all'
               ? coffeesList
               : coffeesList

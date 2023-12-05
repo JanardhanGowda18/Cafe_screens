@@ -72,7 +72,6 @@ class _CustomAppBarState extends State<CustomAppBar>
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Navigate to the login page when the icon is clicked
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => CheckoutPage()),

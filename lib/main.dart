@@ -4,6 +4,7 @@ import 'package:screen_project/screens/home/home.dart';
 import 'package:screen_project/screens/home/widget/cart_item_provider.dart';
 import 'package:screen_project/screens/home/widget/favouriteprovider.dart';
 import 'package:screen_project/screens/home/widget/favouriteprovider2.dart';
+import 'package:screen_project/screens/welcome1.dart';
 
 void main() {
   runApp(
@@ -11,7 +12,12 @@ void main() {
       providers: [
 
     ChangeNotifierProvider(create: (context) => CartItemProvider()),
-        ChangeNotifierProvider(create: (context) => FavoritesProvider()),
+        ChangeNotifierProvider(create: (context) => CartItemProvider()),
+
+  ChangeNotifierProvider(create: (context) => CartItemProvider()),
+
+
+  ChangeNotifierProvider(create: (context) => FavoritesProvider()),
         ChangeNotifierProvider(create: (context) => FavoritesProvider2()),
       ],
       child: const MyApp(),
@@ -33,7 +39,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xFFFAFAFA),
         primaryColor: const Color(0xFFFFBD00),
       ),
-      home: HomePage(),
+      home:  SplashScreen(),
     );
   }
 }

@@ -37,8 +37,7 @@ class _DetailPageState extends State<DetailPage> {
               color: Colors.red,
             ),
             onPressed: () {
-              favoritesProvider.toggleFavorite(widget.coffees);
-              setState(() {
+              favoritesProvider.toggleFavorite(widget.coffees, context);              setState(() {
                 isFavorite = !isFavorite;
               });
             },
