@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import '../home.dart';
 import 'cart_item_provider.dart';
 import '../../detail/widget/success_page.dart';
 import '../../login/login.dart';
@@ -15,6 +16,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the cart is empty
+    if (Provider.of<CartItemProvider>(context).cartItems.isEmpty) {
+      return _buildEmptyCart();
+    }
+
+    // Regular checkout page content
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -78,6 +85,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     // Save user-specific cart items before navigating to the success page
                     await Provider.of<CartItemProvider>(context, listen: false)
                         .saveUserCartItems(FirebaseAuth.instance.currentUser);
+
+                    // Clear both local and user-specific cart items
+                    Provider.of<CartItemProvider>(context, listen: false)
+                        .clearCartItems();
+                    Provider.of<CartItemProvider>(context, listen: false)
+                        .clearUserCartItems(FirebaseAuth.instance.currentUser);
+
+                    // Trigger a rebuild to refresh the FutureBuilder in OrdersPage
+                    setState(() {});
+
                     // Navigate to success page
                     Navigator.push(
                       context,
@@ -116,6 +133,68 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+  Widget _buildEmptyCart() {
+    return Scaffold(
+      backgroundColor: Colors.white, // Set the background color to white
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Your cart is empty!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // Set text color to black
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Awesome coffee or tea awaits!',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black, // Set text color to black
+              ),
+            ),
+            SizedBox(height: 16),
+            Image.asset(
+              'assets/images/wait.jpg', // Replace with the actual image asset path
+              height: 180,
+              width: 180,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.brown,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  'Explore More',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildOrderItem(BuildContext context, CartItem cartItem) {
     return Card(
       elevation: 4,
@@ -129,7 +208,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.delete_outline_outlined),
+                  icon: Icon(Icons.delete_sweep_outlined),
                   onPressed: () {
                     Provider.of<CartItemProvider>(context, listen: false)
                         .removeFromCart(cartItem);
@@ -151,7 +230,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     )
                 ),
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,12 +241,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       Row(
                         children: [
                           Text(
-                            'Quantity : ',
+                            'Quantity: ',
                             style: TextStyle(
                               fontSize: 18,
                             ),
                           ),
-                          // SizedBox(width: 10.0 ),
+                          SizedBox(width: 10),
                           Row(
                             children: [
                               GestureDetector(
@@ -175,7 +254,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   Provider.of<CartItemProvider>(
                                     context,
                                     listen: false,
-                                  ).DecrementQuantity(cartItem);
+                                  ).decrementQuantity(cartItem);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -233,6 +312,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
   Widget _buildOrderDetail(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -284,7 +364,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-
   Widget _buildPaymentOptions() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -320,6 +399,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 }
+
 enum PaymentMethod {
   COD,
   UPI,

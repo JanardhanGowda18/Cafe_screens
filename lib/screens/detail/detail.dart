@@ -198,7 +198,7 @@ class _DetailPageState extends State<DetailPage> {
                         productName: widget.coffees.title,
                         productPrice: widget.coffees.price,
 
-                        productQuantity: quantity,
+                        productQuantity: quantity, productId: '',
                       );
 
                       Provider.of<CartItemProvider>(context, listen: false).addToCart(newItem);

@@ -38,12 +38,11 @@ class _PopularItemState extends State<PopularItem> {
           ),
         );
       },
-
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Expanded(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -64,7 +63,6 @@ class _PopularItemState extends State<PopularItem> {
                       ),
                     ),
                   ),
-
                   Positioned(
                     right: 10,
                     top: 15,
@@ -76,12 +74,10 @@ class _PopularItemState extends State<PopularItem> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          favoritesProvider2.toggleFavorite(widget.bestSellers,context);
+                          favoritesProvider2.toggleFavorite(widget.bestSellers, context);
                         },
                         child: Icon(
-                          isFavorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: Colors.red,
                           size: 15,
                         ),
@@ -91,12 +87,10 @@ class _PopularItemState extends State<PopularItem> {
                 ],
               ),
               SizedBox(height: 10),
-
               Text(
                 widget.bestSellers.title,
                 style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
               ),
-
             ],
           ),
         ),

@@ -113,7 +113,7 @@ class _CoffeesItemState extends State<CoffeesItem> {
                     productImageUrl: widget.coffees.imageUrl,
                     productName: widget.coffees.title,
                     productPrice: widget.coffees.price,
-                    productQuantity: 1,
+                    productQuantity: 1, productId: '',
                   );
                   cartProvider.addToCart(cartItem);
                   ScaffoldMessenger.of(context).showSnackBar(

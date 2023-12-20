@@ -9,16 +9,18 @@ import 'package:screen_project/screens/home/widget/checkoutpage.dart';
 import 'package:screen_project/screens/home/widget/coffee_list_screen.dart';
 import 'package:screen_project/screens/home/widget/custom_app_bar.dart';
 import 'package:screen_project/screens/home/widget/helpandsupport.dart';
-import 'package:screen_project/screens/home/widget/myaccount.dart';
 import 'package:screen_project/screens/home/widget/new_arrival.dart';
+import 'package:screen_project/screens/home/widget/orders.dart';
 import 'package:screen_project/screens/home/widget/popular.dart';
 import 'package:screen_project/screens/home/widget/search_input.dart';
 import 'package:screen_project/screens/home/widget/settingpage.dart';
+import 'package:screen_project/screens/home/widget/terms_and_conditions.dart';
 import 'package:screen_project/screens/login/login.dart';
 import 'package:screen_project/services/auth_sservice.dart';
 
 import '../../models/coffee.dart';
 import '../welcome_screen.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       // User is not logged in, set display name to 'Guest'
       setState(() {
-        displayName = 'Guest';
+        displayName = 'Guest User';
       });
 
       // Clear the cart when the user is not authenticated
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           productImageUrl: '', // Add a default value for productImageUrl
           productName: doc['productName'],
           productPrice: doc['productPrice'],
-          productQuantity: 1, // Add a default value for productQuantity
+          productQuantity: 1, productId: '', // Add a default value for productQuantity
         );
       }).toList();
 
@@ -103,7 +105,7 @@ class _HomePageState extends State<HomePage> {
       case 'Home':
         return Icon(Icons.home, size: 25, color: iconColor);
       case 'Menu':
-        return Icon(Icons.menu, size: 25, color: iconColor);
+        return Icon(Icons.menu_outlined, size: 25, color: iconColor);
       case 'Profile':
         return Icon(Icons.account_circle, size: 25, color: iconColor);
       default:
@@ -180,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/12.jpg'),
+                    image: AssetImage('assets/images/wait.jpg'),
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
                       Colors.brown.shade200,
@@ -286,34 +288,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(Icons.account_circle),
-                        SizedBox(height: 1),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MyAccountPage(),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Text(
-                              'My Account',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -348,14 +323,14 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Icon(Icons.line_weight_sharp),
+                        Icon(Icons.shopping_bag_rounded),
                         SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CheckoutPage(),
+                                builder: (context) => OrdersPage(),
                               ),
                             );
                           },
@@ -447,11 +422,11 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(width: 10),
                         TextButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => termsandcondition(),
-                            //     ));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TermsAndConditionsPage(),
+                                ));
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
