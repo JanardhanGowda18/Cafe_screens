@@ -16,6 +16,16 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int quantity = 1;
+  void onIncrement(){
+    setState(() {
+      quantity=quantity + 1;
+    });
+  }
+  void onDecrement(){
+    setState(() {
+      quantity=quantity - 1 > 0?quantity-1:1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,18 +110,40 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Ingredients: ${widget.coffees.ingredients}',
-                style: TextStyle(fontSize: 16),
+            Padding(padding: EdgeInsets.all(10.0),
+              child: RichText(
+                text: TextSpan(
+                    text: 'Ingredients:',
+                    style: TextStyle(
+                      fontSize: 13,fontWeight: FontWeight.bold,color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: '${widget.coffees.ingredients}',
+                          style: TextStyle(
+                            fontSize: 14,fontWeight: FontWeight.normal,color: Colors.black,
+                          )
+                      )
+                    ]
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Description: ${widget.coffees.description}',
-                style: TextStyle(fontSize: 16),
+            Padding(padding: EdgeInsets.all(10.0),
+              child: RichText(
+                text: TextSpan(
+                    text: 'Description:',
+                    style: TextStyle(
+                      fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: '${widget.coffees.description}',
+                          style: TextStyle(
+                            fontSize: 13,fontWeight: FontWeight.normal,color: Colors.black,
+                          )
+                      )
+                    ]
+                ),
               ),
             ),
             SizedBox(height: 106),
@@ -121,19 +153,43 @@ class _DetailPageState extends State<DetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Quantity
-                  QuantityButton(
-                    quantity: quantity,
-                    onIncrement: () {
-                      setState(() {
-                        quantity = quantity + 1;
-                      });
-                    },
-                    onDecrement: () {
-                      setState(() {
-                        quantity = quantity - 1 > 0 ? quantity - 1 : 1;
-                      });
-                    },
+                Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: onDecrement,
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.brown,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      onPrimary: Colors.white,
+                    ),
+                    child: Icon(Icons.remove),
                   ),
+                  SizedBox(width: 16),
+                  Text(
+                    '$quantity',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: onIncrement,
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.brown,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      onPrimary: Colors.white,
+                    ),
+                    child: Icon(Icons.add),
+                  ),
+                ],
+              ),
                   ElevatedButton(
                     onPressed: () {
                       List<CartItem> cartItems = Provider.of<CartItemProvider>(context, listen: false).cartItems;
@@ -155,10 +211,11 @@ class _DetailPageState extends State<DetailPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black,
+                      backgroundColor: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white, // Set text color for the button
+                      onPrimary: Colors.white,
                     ),
                     child: Text(
                       'Add to Cart',

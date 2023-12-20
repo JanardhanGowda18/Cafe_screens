@@ -1,5 +1,7 @@
 
-class Coffees {
+import 'package:equatable/equatable.dart';
+
+class Coffees extends Equatable {
   final String title;
   final String subtitle;
   final String ingredients;
@@ -113,5 +115,16 @@ class Coffees {
 
     ];
   }
+  @override
+  List<Object?> get props =>
+      [
+  title,
+  subtitle,
+  price,
+  imageUrl,
+  ingredients,
+  description,
+  detailUrl,
+  ];
 }
 

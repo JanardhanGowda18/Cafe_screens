@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_project/models/bestsell.dart';
 import 'package:screen_project/screens/detail/detail1.dart';
+import '../../constants.dart';
 import 'cart_item_provider.dart';
 import 'favouriteprovider2.dart';
 
@@ -20,113 +21,83 @@ class _PopularItemState extends State<PopularItem> {
     final favoritesProvider2 = Provider.of<FavoritesProvider2>(context);
     bool isFavorite = favoritesProvider2.favorites.contains(widget.bestSellers);
 
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  DetailPage1(bestSellers: widget.bestSellers),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-            ),
-          );
-        },
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                DetailPage1(bestSellers: widget.bestSellers),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+              return SlideTransition(position: offsetAnimation, child: child);
+            },
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    Hero(
-                      tag: 'bestSellersImage${widget.bestSellers.title}',
-                      child: Container(
-                        margin: EdgeInsets.all(8),
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage(widget.bestSellers.imageUrl),
-                            // fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 20,
-                      top: 15,
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          shape: BoxShape.circle,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            favoritesProvider2.toggleFavorite(widget.bestSellers);
-                          },
-                          child: Icon(
-                            isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: Colors.red,
-                            size: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  widget.bestSellers.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    CartItem cartItem = CartItem(
-                      productImageUrl: widget.bestSellers.imageUrl,
-                      productName: widget.bestSellers.title,
-                      productPrice: widget.bestSellers.price,
-                      productQuantity: 1,
-                    );
+        );
+      },
 
-                    Provider.of<CartItemProvider>(context, listen: false).addToCart(cartItem);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Added to Cart'),
-                        duration: Duration(seconds: 2),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  Hero(
+                    tag: 'bestSellersImage${widget.bestSellers.title}',
+                    child: Container(
+                      margin: EdgeInsets.all(8),
+                      height: 130,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(widget.bestSellers.imageUrl),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    onPrimary: Colors.white,
-                  ),
-                  child: Text(
-                    'Add',
-                    style: TextStyle(
-                      color: Colors.white,
                     ),
                   ),
-                ),
-              ],
-            ),
+
+                  Positioned(
+                    right: 10,
+                    top: 15,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          favoritesProvider2.toggleFavorite(widget.bestSellers,context);
+                        },
+                        child: Icon(
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.red,
+                          size: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+
+              Text(
+                widget.bestSellers.title,
+                style: TextStyle(fontWeight: FontWeight.bold, height: 1.5),
+              ),
+
+            ],
           ),
         ),
       ),

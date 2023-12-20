@@ -28,7 +28,7 @@ class QuantityButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white, // Set text color for the button
+            onPrimary: Colors.white,
           ),
           child: Icon(Icons.remove),
         ),
@@ -38,7 +38,7 @@ class QuantityButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Set color for the middle number
+            color: Colors.black,
           ),
         ),
         SizedBox(width: 16),
@@ -49,7 +49,7 @@ class QuantityButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white, // Set text color for the button
+            onPrimary: Colors.white,
           ),
           child: Icon(Icons.add),
         ),
@@ -80,7 +80,6 @@ class _DetailPage1State extends State<DetailPage1> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigate back when the back button is pressed
             Navigator.pop(context);
           },
         ),
@@ -91,7 +90,7 @@ class _DetailPage1State extends State<DetailPage1> {
               color: Colors.red,
             ),
             onPressed: () {
-              favoritesProvider2.toggleFavorite(widget.bestSellers);
+              favoritesProvider2.toggleFavorite(widget.bestSellers,context);
               setState(() {
                 isFavorite = !isFavorite;
               });
@@ -103,7 +102,6 @@ class _DetailPage1State extends State<DetailPage1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display "Product Details" Text
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(

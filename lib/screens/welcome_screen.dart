@@ -1,10 +1,13 @@
-import 'package:screen_project/screens/signup_screen.dart';
+import 'package:screen_project/screens/signup/signup_screen.dart';
 import 'package:screen_project/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
-import 'login.dart';
+import 'home/home.dart';
+import 'login/LoginViaOtpScreen.dart';
+import 'login/login.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -67,6 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     _controller.forward();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +81,31 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             Navigator.pop(context);
           },
         ),
+        actions: [
+          // Add the Skip button in the top right corner
+          Padding(
+            padding: EdgeInsets.only(right: 30.0),
+            child: TextButton(
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool('userSkippedLogin', true);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.brown,
+              ),
+              child: Text(
+                "Skip",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,7 +151,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               child: CustomButton(
                 color: kprimaryColor,
                 textColor: Colors.white,
-                text: "Login",
+                text: "Login ",
                 onPress: () {
                   Navigator.push(
                     context,
@@ -142,7 +171,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               child: CustomButton(
                 color: ksecondryColor,
                 textColor: Colors.black,
-                text: "Sign Up",
+                text: "Register",
                 onPress: () {
                   Navigator.push(
                     context,

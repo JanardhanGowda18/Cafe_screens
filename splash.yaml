@@ -1,0 +1,12 @@
+flutter_native_splash:
+  color: "#FFFFF"
+  color_dark: "#272727"
+  image: assets/images/coffelogo.jpg
+
+  android_12:
+    color: "#FFFFF"
+    color_dark: "#272727"
+    image: assets/images/coffelogo.jpg
+
+  web: false
+

@@ -19,6 +19,7 @@ class FavouriteScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Favourite items'),
+        centerTitle: true,
       ),
       body: (coffeeFavorites.isEmpty && bestSellersFavorites.isEmpty)
           ? Center(

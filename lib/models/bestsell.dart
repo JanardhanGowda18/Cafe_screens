@@ -1,4 +1,6 @@
-class BestSellers {
+import 'package:equatable/equatable.dart';
+
+class BestSellers extends Equatable {
   final String title;
   final String category;
   final String price;
@@ -26,20 +28,20 @@ class BestSellers {
         description: 'Indian filter coffee is a coffee drink made by mixing hot milk and sugar with the infusion obtained by percolation brewing of finely ground coffee powder with chicory in a traditional Indian filter',
       ),
       BestSellers(
-        title: 'Chai',
-        category: 'Coffee Beans',
-        price: '\₹ 110.00',
-        imageUrl: 'assets/images/Chai.jpg',
-        ingredients: 'Black coffee beans, hot water',
-        description: 'Chai is a type of tea that is made from black tea, spices, and milk or cream. Chai has a strong, spicy flavor. '
+          title: 'Chai',
+          category: 'Coffee Beans',
+          price: '\₹ 110.00',
+          imageUrl: 'assets/images/Chai.jpg',
+          ingredients: 'Black coffee beans, hot water',
+          description: 'Chai is a type of tea that is made from black tea, spices, and milk or cream. Chai has a strong, spicy flavor. '
       ),
       BestSellers(
-        title: 'Instant Coffee',
-        category: 'Instant coffee',
-        price: '\₹ 120.00',
-        imageUrl: 'assets/images/Instant Coffee.jpg',
-        ingredients: 'milk,sugar, coffee powder',
-        description: 'Instant coffee is known for being easy to make. All you have to do is scoop the coffee granules into a mug, add water, and stir. Sweeteners and creamers can be added before or after you pour the water; it doesnt make much difference either way.' ),
+          title: 'Instant Coffee',
+          category: 'Instant coffee',
+          price: '\₹ 120.00',
+          imageUrl: 'assets/images/Instant Coffee.jpg',
+          ingredients: 'milk,sugar, coffee powder',
+          description: 'Instant coffee is known for being easy to make. All you have to do is scoop the coffee granules into a mug, add water, and stir. Sweeteners and creamers can be added before or after you pour the water; it doesnt make much difference either way.'),
 
       BestSellers(
         title: 'Black Tea',
@@ -81,7 +83,18 @@ class BestSellers {
         imageUrl: 'assets/images/Herbal Tea.jpg',
         description: ' Herbal tea is a type of tea that is made from dried herbs, flowers, or fruits. Herbal tea does not contain caffeine and has a variety of flavors. ',
       ),
-      
+
     ];
   }
-}
+    @override
+    List<Object?> get props =>
+    [
+      title,
+      category,
+      price,
+      imageUrl,
+      ingredients,
+      description,
+
+    ];
+  }

@@ -1,7 +1,6 @@
 import 'package:screen_project/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
 import 'constants.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -46,8 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       backgroundColor: cafeBrown,
       body: Stack(
-        children: [
-          // White Container top half
+        children:[
           AnimatedContainer(
             duration: const Duration(seconds: 1),
             height: copAnimated ? screenHeight / 1.9 : screenHeight,
@@ -55,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen>
               color: Colors.white,
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(copAnimated ? 40.0 : 0.0)),
             ),
-            child: Column(
+            child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Visibility(
                   visible: !copAnimated,
@@ -92,13 +90,10 @@ class _SplashScreenState extends State<SplashScreen>
               ],
             ),
           ),
-
-          // Text bottom part
           Visibility(
             visible: copAnimated,
             child: _BottomPart(),
           ),
-
         ],
       ),
     );
@@ -110,60 +105,61 @@ class _BottomPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Find The Best Coffee for You',
-              style: TextStyle(
-                  fontSize: 27.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            const SizedBox(height: 30.0),
-            Text(
-              'Sip into bliss with our exquisite coffee—where every drop is a tiny celebration of flavor. .',
-              style: TextStyle(
-                fontSize: 15.0,
-                color: Colors.white.withOpacity(0.8),
-                height: 1.5,
+    return
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Find The Best Coffee for You',
+                style: TextStyle(
+                    fontSize: 27.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
-            ),
-            const SizedBox(height: 50.0),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WelcomeScreen(),
-                  ),
-                );
-              },
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  height: 85.0,
-                  width: 85.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2.0),
-                  ),
-                  child: const Icon(
-                    Icons.chevron_right,
-                    size: 50.0,
-                    color: Colors.white,
+              const SizedBox(height: 30.0),
+              Text(
+                'Sip into bliss with our exquisite coffee—where every drop is a tiny celebration of flavor. .',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  color: Colors.white.withOpacity(0.8),
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 50.0),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WelcomeScreen(),
+                    ),
+                  );
+                },
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: 85.0,
+                    width: 85.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2.0),
+                    ),
+                    child: const Icon(
+                      Icons.chevron_right,
+                      size: 50.0,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 50.0),
-          ],
+              const SizedBox(height: 30.0),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }

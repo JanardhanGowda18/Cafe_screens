@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import '../../detail/widget/success_page.dart';
 import 'cart_item_provider.dart';
+import '../../detail/widget/success_page.dart';
+import '../../login/login.dart';
 
 class CheckoutPage extends StatefulWidget {
   @override
@@ -15,21 +17,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Checkout',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 28,
+            color: Colors.brown,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Order Summary',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: Consumer<CartItemProvider>(
                 builder: (context, cartItemProvider, child) {
@@ -45,30 +57,55 @@ class _CheckoutPageState extends State<CheckoutPage> {
             SizedBox(height: 16),
             _buildTotalAmount(context),
             SizedBox(height: 16),
+            Center(
+              child: Text(
+                "Choose pick-up method",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  fontFamily: 'RubikBubbles',
+                ),
+              ),
+            ),
             _buildPaymentOptions(),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-
-                if (selectedPaymentMethod == PaymentMethod.COD) {
-
-                } else if (selectedPaymentMethod == PaymentMethod.UPI) {
-
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SuccessPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  'Place Order',
-                  style: TextStyle(
-                    fontSize: 18,
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Check if the user is already logged in
+                  if (isLoggedIn()) {
+                    // Save user-specific cart items before navigating to the success page
+                    await Provider.of<CartItemProvider>(context, listen: false)
+                        .saveUserCartItems(FirebaseAuth.instance.currentUser);
+                    // Navigate to success page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SuccessPage()),
+                    );
+                  } else {
+                    // User is not logged in, navigate to sign-in page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.brown,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    'Place Order',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -92,7 +129,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.delete_sweep_outlined),
+                  icon: Icon(Icons.delete_outline_outlined),
                   onPressed: () {
                     Provider.of<CartItemProvider>(context, listen: false)
                         .removeFromCart(cartItem);
@@ -104,14 +141,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Image.asset(
-                    cartItem.productImageUrl,
-                    fit: BoxFit.cover,
-                  ),
+                    height: 120,
+                    width: 110,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        cartItem.productImageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    )
                 ),
-                SizedBox(width: 16),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,12 +162,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       Row(
                         children: [
                           Text(
-                            'Quantity: ',
+                            'Quantity : ',
                             style: TextStyle(
                               fontSize: 18,
                             ),
                           ),
-                          SizedBox(width: 30),
+                          // SizedBox(width: 10.0 ),
                           Row(
                             children: [
                               GestureDetector(
@@ -135,16 +175,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   Provider.of<CartItemProvider>(
                                     context,
                                     listen: false,
-                                  ).removeFromCart(cartItem);
+                                  ).DecrementQuantity(cartItem);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.grey,
+                                    color: Colors.brown,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.remove),
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -167,11 +210,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.grey,
+                                    color: Colors.brown,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.add),
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Icon(Icons.add,color: Colors.white,),
                                   ),
                                 ),
                               ),
@@ -190,7 +233,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
-
   Widget _buildOrderDetail(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -216,8 +258,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   Widget _buildTotalAmount(BuildContext context) {
-    double totalAmount = Provider.of<CartItemProvider>(context)
-        .calculateTotalAmount();
+    double totalAmount = Provider.of<CartItemProvider>(context).calculateTotalAmount();
     double discountAmount = totalAmount > 500 ? 49.0 : 0.0;
     double couponAmount = totalAmount >= 1000 ? 100.0 : 0.0;
     double discountedTotalAmount = totalAmount - discountAmount - couponAmount;
@@ -227,6 +268,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
       children: [
         _buildOrderDetail(
             'SubTotal Amount', '\₹${totalAmount.toStringAsFixed(2)}'),
+        Divider(
+          color: Colors.black,
+        ),
         if (totalAmount > 500)
           _buildOrderDetail(
               'Delivery Fee', '-\₹${discountAmount.toStringAsFixed(2)}'),
@@ -240,23 +284,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
+
   Widget _buildPaymentOptions() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        SizedBox(height: 16),
         _buildPaymentOption(
           PaymentMethod.COD,
           'Cash on Delivery',
+          Icons.money,
         ),
         _buildPaymentOption(
           PaymentMethod.UPI,
           'UPI Payment',
+          Icons.payment,
         ),
       ],
     );
   }
 
-  Widget _buildPaymentOption(PaymentMethod method, String label) {
+  Widget _buildPaymentOption(PaymentMethod method, String label, IconData money) {
     return ListTile(
       title: Text(label),
       leading: Radio(
@@ -267,12 +315,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
             selectedPaymentMethod = value;
           });
         },
+        activeColor: Colors.brown,
       ),
     );
   }
 }
-
 enum PaymentMethod {
   COD,
   UPI,
+}
+
+bool isLoggedIn() {
+  return FirebaseAuth.instance.currentUser != null;
 }

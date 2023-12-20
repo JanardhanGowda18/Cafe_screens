@@ -7,10 +7,12 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       child: Row(
         children: [
+          SizedBox(height: 80),
+
           InkWell(
             onTap: () {
               favoritesProvider.setSelectedCategory('all');
@@ -26,6 +28,9 @@ class CategoryItem extends StatelessWidget {
                       ? Theme.of(context).primaryColor
                       : Colors.grey,
                 ),
+                color: favoritesProvider.selectedCategory == 'all'
+                    ? favoritesProvider.selectedCategoryColor
+                    : Colors.transparent,
               ),
               child: Center(
                 child: Text(
@@ -33,7 +38,7 @@ class CategoryItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     color: favoritesProvider.selectedCategory == 'all'
-                        ? Colors.green
+                        ? Colors.white
                         : Colors.black,
                   ),
                 ),
@@ -56,6 +61,9 @@ class CategoryItem extends StatelessWidget {
                       ? Theme.of(context).primaryColor
                       : Colors.grey,
                 ),
+                color: favoritesProvider.selectedCategory == 'coffee'
+                    ? favoritesProvider.selectedCategoryColor
+                    : Colors.transparent,
               ),
               child: Center(
                 child: Text(
@@ -63,7 +71,7 @@ class CategoryItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     color: favoritesProvider.selectedCategory == 'coffee'
-                        ? Colors.green
+                        ? Colors.white
                         : Colors.black,
                   ),
                 ),
@@ -86,6 +94,9 @@ class CategoryItem extends StatelessWidget {
                       ? Theme.of(context).primaryColor
                       : Colors.grey,
                 ),
+                color: favoritesProvider.selectedCategory == 'tea'
+                    ? favoritesProvider.selectedCategoryColor
+                    : Colors.transparent,
               ),
               child: Center(
                 child: Text(
@@ -93,7 +104,7 @@ class CategoryItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     color: favoritesProvider.selectedCategory == 'tea'
-                        ? Colors.green
+                        ? Colors.white
                         : Colors.black,
                   ),
                 ),
@@ -105,5 +116,3 @@ class CategoryItem extends StatelessWidget {
     );
   }
 }
-
-
