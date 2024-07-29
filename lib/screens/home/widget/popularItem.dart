@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_project/models/bestsell.dart';
 import 'package:screen_project/screens/detail/detail1.dart';
-import '../../constants.dart';
-import 'cart_item_provider.dart';
 import 'favouriteprovider2.dart';
 
 class PopularItem extends StatefulWidget {

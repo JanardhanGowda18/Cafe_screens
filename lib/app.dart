@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'COFFEE SHOP',
       theme: ThemeData(
-        backgroundColor: Color(0xFFFAFAFA),
+        // backgroundColor: Color(0xFFFAFAFA),
         primaryColor: const Color(0xFFFFBD00),
       ),
       home:  const Scaffold(backgroundColor:skyblue, body: Center(child: CircularProgressIndicator(color: Colors.white))),

@@ -22,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen>
   late SignupController _controller;
   late AuthService authService = AuthService();
   final FirestoreService firestoreService = FirestoreService();
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -31,27 +32,34 @@ class _SignupScreenState extends State<SignupScreen>
   }
 
   Future<void> _validateInputs() async {
-    // Validate inputs and sign up logic here
+    bool validationSuccess = await _controller.validateInputs();
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool userSignedUpBefore = prefs.getBool('userSignedUp') ?? false;
-
-    if (userSignedUpBefore) {
-      // User has signed up before, navigate to home page directly
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else {
-      // User is signing up for the first time, set the flag in shared preferences
-      prefs.setBool('userSignedUp', true);
-
-      // Navigate to home page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+    if (validationSuccess) {
+      // Show a pop-up message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Signup Successful'),
+            content: Text('Your account has been successfully created.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Navigate to home page
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
     }
+    // Remove the else block so that it doesn't navigate in case of validation failure
   }
 
   @override
@@ -134,12 +142,25 @@ class _SignupScreenState extends State<SignupScreen>
                             SizedBox(height: 20),
                             TextField(
                               controller: _controller.passwordController,
-                              obscureText: true,
+                              obscureText: !_isPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: "Password",
                                 errorText: _controller.getPasswordError(),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible =
+                                      !_isPasswordVisible;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
@@ -156,7 +177,7 @@ class _SignupScreenState extends State<SignupScreen>
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>SignIn()));
+                                        builder: (context) => SignIn()));
                               },
                               child: Text(
                                 "Already have an account? Login",
@@ -180,7 +201,6 @@ class _SignupScreenState extends State<SignupScreen>
       ),
     );
   }
-
 
   @override
   void dispose() {

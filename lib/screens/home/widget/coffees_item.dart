@@ -124,11 +124,10 @@ class _CoffeesItemState extends State<CoffeesItem> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: buttoncolor,
+                  foregroundColor: Colors.white, backgroundColor: buttoncolor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  onPrimary: Colors.white,
                 ),
                 child: Text(
                   'Add',

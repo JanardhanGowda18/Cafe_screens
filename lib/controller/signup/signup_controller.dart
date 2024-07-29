@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../helpers/helpers.dart';
 import '../../screens/detail/widget/success_page.dart';
-import '../../screens/signup/OtpVerificationScreen.dart';
-import '../../screens/login/login.dart';
+import '../../screens/home/home.dart';
 import '../../screens/signup/signup_screen_state.dart';
 import '../../services/auth_sservice.dart';
 import '../../services/firestore_service.dart';
@@ -26,14 +26,16 @@ class SignupController {
   String? _usernameError;
   String? _emailError;
   String? _phonenumberError;
-  String?  _passwordError;
-
+  String? _passwordError;
 
   late SignupScreenState _state;
   final SignupValidation _validation = SignupValidation();
 
   SignupController(
-      this._state, this.authService, this.firestoreService);
+      this._state,
+      this.authService,
+      this.firestoreService,
+      );
 
   void initAnimations() {
     _controller = AnimationController(
@@ -85,7 +87,8 @@ class SignupController {
 
   String? getPhoneNumberError() => _phonenumberError;
 
-  void validateInputs() async {
+  // Inside SignupController
+  Future<bool> validateInputs() async {
     _state.setState(() {
       _usernameError = _validation.validateUsername(usernameController.text);
       _emailError = _validation.validateEmail(emailController.text);
@@ -124,6 +127,8 @@ class SignupController {
             builder: (BuildContext context) => SuccessPage(),
           ),
         );
+
+        return true; // Return true if validation and sign-up are successful
       } catch (e) {
         hideLoader(_state.context);
         showErrorSnackBar(_state.context, 'Error creating account: $e');
@@ -132,7 +137,10 @@ class SignupController {
       hideLoader(_state.context);
       showErrorSnackBar(_state.context, 'Please fix the validation errors');
     }
+
+    return false; // Return false if validation fails
   }
+
 
   Future<void> logout() async {
     try {

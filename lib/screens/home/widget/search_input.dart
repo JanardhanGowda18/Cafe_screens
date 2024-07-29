@@ -18,7 +18,7 @@ class _SearchInputState extends State<SearchInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 90,
       margin: EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
         child: Column(
             children: [

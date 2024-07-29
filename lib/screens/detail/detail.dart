@@ -159,11 +159,10 @@ class _DetailPageState extends State<DetailPage> {
                   ElevatedButton(
                     onPressed: onDecrement,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.brown,
+                      foregroundColor: Colors.white, backgroundColor: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
                     ),
                     child: Icon(Icons.remove),
                   ),
@@ -180,11 +179,10 @@ class _DetailPageState extends State<DetailPage> {
                   ElevatedButton(
                     onPressed: onIncrement,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.brown,
+                      foregroundColor: Colors.white, backgroundColor: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
                     ),
                     child: Icon(Icons.add),
                   ),
@@ -210,12 +208,11 @@ class _DetailPageState extends State<DetailPage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      backgroundColor: Colors.brown,
+                      foregroundColor: Colors.white, backgroundColor: Colors.black,
+                      // backgroundColor: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
                     ),
                     child: Text(
                       'Add to Cart',

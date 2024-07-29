@@ -186,6 +186,28 @@ class CartItemProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _loadUserCartItems(User? user) async {
+    // Check if the user is not null before proceeding
+    if (user != null) {
+      // Fetch user's cart items from Firestore
+      QuerySnapshot<Map<String, dynamic>> cartItemsQuery =
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('cart').get();
+
+      List<CartItem> userCartItems = cartItemsQuery.docs.map((doc) {
+        // Map Firestore document to CartItem object
+        return CartItem(
+          productImageUrl: '', // Add a default value for productImageUrl
+          productName: doc['productName'],
+          productPrice: doc['productPrice'],
+          productQuantity: 1,
+          productId: '', // Add a default value for productQuantity
+        );
+      }).toList();
+
+      // Update the local cart with user's cart items
+      setUserCartItems(user); // Assuming setUserCartItems is a method in your CartItemProvider
+    }
+  }
   // Calculate the total amount of the items in the cart
   double calculateTotalAmount() {
     double totalAmount = 0.0;

@@ -20,7 +20,7 @@ class BestSellers extends Equatable {
   static List<BestSellers> generateBestSellers() {
     return [
       BestSellers(
-        title: 'South Indian Coffee',
+        title: 'Indian Coffee',
         category: 'Coffee',
         price: '\₹  129.89',
         imageUrl: 'assets/images/Filter Coffee.jpg',

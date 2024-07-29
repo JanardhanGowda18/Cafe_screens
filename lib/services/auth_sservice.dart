@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,6 +21,64 @@ class AuthService {
       rethrow;
     }
   }
+
+
+  Future<void> _changePassword(BuildContext context) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Implement your logic to get the new password from the user
+        String newPassword = "new_password";
+
+        // Prompt the user to re-enter their password
+        String currentPassword = await _showPasswordPrompt(context);
+
+        // Reauthenticate the user with their current password
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: currentPassword,
+        );
+
+        await user.reauthenticateWithCredential(credential);
+
+        // Now you can change the password
+        await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password changed successfully.'),
+          ),
+        );
+      } else {
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'No user found. Please sign in again.',
+        );
+      }
+    } catch (e) {
+      print('Error changing password: $e');
+
+      // Cast the exception to FirebaseAuthException
+      if (e is FirebaseAuthException) {
+        print('Error code: ${e.code}');
+        print('Error message: ${e.message}');
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error changing password. Please try again.'),
+        ),
+      );
+    }
+  }
+
+  Future<String> _showPasswordPrompt(BuildContext context) async {
+    // Implement your logic to show a dialog or prompt for the current password
+    // For example, you can use the showDialog function to create a password input dialog
+    return "current_password"; // Replace with the actual implementation
+  }
+
 
   Future<String> sendOtp(String phoneNumber) async {
     try {

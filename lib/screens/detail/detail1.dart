@@ -24,11 +24,10 @@ class QuantityButton extends StatelessWidget {
         ElevatedButton(
           onPressed: onDecrement,
           style: ElevatedButton.styleFrom(
-            primary: Colors.brown,
+            foregroundColor: Colors.white, backgroundColor: Colors.brown,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white,
           ),
           child: Icon(Icons.remove),
         ),
@@ -45,11 +44,10 @@ class QuantityButton extends StatelessWidget {
         ElevatedButton(
           onPressed: onIncrement,
           style: ElevatedButton.styleFrom(
-            primary: Colors.brown,
+            foregroundColor: Colors.white, backgroundColor: Colors.brown,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            onPrimary: Colors.white,
           ),
           child: Icon(Icons.add),
         ),
@@ -211,11 +209,10 @@ class _DetailPage1State extends State<DetailPage1> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.brown,
+                      foregroundColor: Colors.white, backgroundColor: Colors.brown,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPrimary: Colors.white,
                     ),
                     child: Text(
                       'Add to Cart',

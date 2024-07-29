@@ -13,6 +13,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   PaymentMethod? selectedPaymentMethod;
+  List<CartItem> guestCartItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +62,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 },
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             _buildTotalAmount(context),
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             Center(
               child: Text(
                 "Choose pick-up method",
@@ -92,6 +93,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Provider.of<CartItemProvider>(context, listen: false)
                         .clearUserCartItems(FirebaseAuth.instance.currentUser);
 
+                    // If there were guest cart items, add them to the user's cart
+                    if (guestCartItems.isNotEmpty) {
+                      for (CartItem item in guestCartItems) {
+                        Provider.of<CartItemProvider>(context, listen: false).addToCart(item);
+                      }
+                    }
+
                     // Trigger a rebuild to refresh the FutureBuilder in OrdersPage
                     setState(() {});
 
@@ -102,6 +110,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     );
                   } else {
                     // User is not logged in, navigate to sign-in page
+                    // Save the cart items before navigating to sign-in
+                    guestCartItems =
+                        Provider.of<CartItemProvider>(context, listen: false).cartItems;
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignIn()),
@@ -230,13 +242,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     )
                 ),
-                // SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildOrderDetail('Product', cartItem.productName),
-                      _buildOrderDetail('Price', cartItem.productPrice),
+                      _buildOrderDetail('Product : ', cartItem.productName),
+                      _buildOrderDetail('Price : ', cartItem.productPrice),
                       SizedBox(height: 8),
                       Row(
                         children: [
@@ -246,7 +258,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               fontSize: 18,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          // SizedBox(width: 10),
                           Row(
                             children: [
                               GestureDetector(
@@ -270,7 +282,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width:8),
                               Text(
                                 cartItem.productQuantity.toString(),
                                 style: TextStyle(
@@ -312,7 +324,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
-
   Widget _buildOrderDetail(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -357,7 +368,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         if (totalAmount >= 1000)
           _buildOrderDetail(
               'Coupon', '-\₹${couponAmount.toStringAsFixed(2)}'),
-        SizedBox(height: 8),
+        SizedBox(height: 5),
         _buildOrderDetail('Total Amount',
             '\₹${discountedTotalAmount.toStringAsFixed(2)}'),
       ],
@@ -368,16 +379,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(height: 16),
+        SizedBox(height: 10),
         _buildPaymentOption(
           PaymentMethod.COD,
           'Cash on Delivery',
-          Icons.money,
+          Icons.money_outlined,
         ),
         _buildPaymentOption(
           PaymentMethod.UPI,
           'UPI Payment',
-          Icons.payment,
+          Icons.alarm,
         ),
       ],
     );

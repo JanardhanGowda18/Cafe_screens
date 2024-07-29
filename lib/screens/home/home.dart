@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:screen_project/screens/detail/detail.dart';
 import 'package:screen_project/screens/home/widget/FavoritesPage.dart';
 import 'package:screen_project/screens/home/widget/cart_item_provider.dart';
-import 'package:screen_project/screens/home/widget/checkoutpage.dart';
 import 'package:screen_project/screens/home/widget/coffee_list_screen.dart';
 import 'package:screen_project/screens/home/widget/custom_app_bar.dart';
 import 'package:screen_project/screens/home/widget/helpandsupport.dart';
@@ -19,8 +18,8 @@ import 'package:screen_project/screens/login/login.dart';
 import 'package:screen_project/services/auth_sservice.dart';
 
 import '../../models/coffee.dart';
+import '../Myaccount.dart';
 import '../welcome_screen.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -56,42 +55,58 @@ class _HomePageState extends State<HomePage> {
         displayName = userDoc['username'] ?? 'Guest';
       });
 
-      // Load user's cart items
-      _loadUserCartItems(user);
+      // Check if the user was a guest before login
+      if (wasGuestBeforeLogin) {
+        _transferGuestCartToUserCart(user!);
+        wasGuestBeforeLogin = false;
+      } else {
+        _loadUserCartItems(user!);
+      }
     } else {
-      // User is not logged in, set display name to 'Guest'
       setState(() {
-        displayName = 'Guest User';
+        displayName = 'Guest';
       });
 
-      // Clear the cart when the user is not authenticated
       Provider.of<CartItemProvider>(context, listen: false).clearCartItems();
     }
   }
 
+  bool wasGuestBeforeLogin = false;
 
-
-  Future<void> _loadUserCartItems(User? user) async {
-    // Check if the user is not null before proceeding
+  Future<void> _loadUserCartItems(User user) async {
     if (user != null) {
-      // Fetch user's cart items from Firestore
       QuerySnapshot<Map<String, dynamic>> cartItemsQuery =
       await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('cart').get();
 
       List<CartItem> userCartItems = cartItemsQuery.docs.map((doc) {
-        // Map Firestore document to CartItem object
         return CartItem(
-          productImageUrl: '', // Add a default value for productImageUrl
+          productImageUrl: '',
           productName: doc['productName'],
           productPrice: doc['productPrice'],
-          productQuantity: 1, productId: '', // Add a default value for productQuantity
+          productQuantity: 1,
+          productId: '',
         );
       }).toList();
 
-      // Update the local cart with user's cart items
-      Provider.of<CartItemProvider>(context, listen: false).setUserCartItems(user); // Change this line
     }
   }
+
+
+
+  Future<void> _transferGuestCartToUserCart(User user) async {
+    List<CartItem> guestCartItems = Provider.of<CartItemProvider>(context, listen: false).cartItems;
+    for (CartItem cartItem in guestCartItems) {
+      FirebaseFirestore.instance.collection('users').doc(user.uid).collection('cart').add({
+        'productName': cartItem.productName,
+        'productPrice': cartItem.productPrice,
+        'productImageUrl': cartItem.productImageUrl,
+        'productQuantity': cartItem.productQuantity,
+      });
+    }
+
+    Provider.of<CartItemProvider>(context, listen: false).clearCartItems();
+  }
+
 
 
   void openDrawer() {
@@ -105,7 +120,7 @@ class _HomePageState extends State<HomePage> {
       case 'Home':
         return Icon(Icons.home, size: 25, color: iconColor);
       case 'Menu':
-        return Icon(Icons.menu_outlined, size: 25, color: iconColor);
+        return Icon(Icons.menu, size: 25, color: iconColor);
       case 'Profile':
         return Icon(Icons.account_circle, size: 25, color: iconColor);
       default:
@@ -122,7 +137,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(6),
+          preferredSize: Size.fromHeight(7),
           child: SearchInput(
             coffeesList: coffeeList,
             onItemClicked: (selectedCoffee) {
@@ -176,13 +191,13 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         backgroundColor: Colors.yellow.shade50,
         child: SingleChildScrollView(
-          child: Column(
+          child:Column(
             children: [
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/wait.jpg'),
+                    image: AssetImage('assets/images/cafe.jpg'),
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
                       Colors.brown.shade200,
@@ -197,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.account_circle_rounded, color: Colors.grey, size: 100),
-                      SizedBox(width: 16, height: 150),
+                      SizedBox(width: 16, height: 100),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -213,19 +228,65 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          Text(
-                            "Jnr App Developer",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                          FutureBuilder<User?>(
+                            future: FirebaseAuth.instance.authStateChanges().first,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              }
+
+                              User? user = snapshot.data;
+
+                              if (user == null) {
+                                // Guest user, show Login/Signup option
+                                return Row(
+                                  children: [
+                                    // Icon(Icons.login),
+                                    SizedBox(height: 20),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SignIn(),
+                                          ),
+                                        );
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                        // Adjust vertical padding as needed
+                                        backgroundColor: Colors.brown.withOpacity(0.8),
+                                      ),
+                                      child: Text(
+                                        'Login/Signup',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+
+                                return Text(
+                                  user.email ?? "Jnr App Developer",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
+
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 30, top: 10),
@@ -288,7 +349,34 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Icon(Icons.account_circle),
+                        SizedBox(height: 20),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyAccountPage(),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              'My Account',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                         ),
+                      ],
+                    ),
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -323,7 +411,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Icon(Icons.shopping_bag_rounded),
+                        Icon(Icons.shopping_bag),
                         SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
@@ -453,20 +541,48 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(width: 10),
                         TextButton(
                           onPressed: () async {
-                            // Call the logout method from AuthService
-                            await _authService.logout();
-
-                            // Update the display name after logout
-                            await _updateDisplayName();
-
-                            // Close the drawer
-                            Navigator.pop(context);
-
-                            // Navigate to the WelcomeScreen after logout
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                            bool confirmLogout = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Confirm Logout'),
+                                  content: Text('Are you sure you want to log out?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text('Yes'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text('No'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
+
+                            if (confirmLogout ?? false) {
+                              try {
+                                await _authService.logout();
+                                await _updateDisplayName();
+                                Navigator.pop(context); // Close the drawer
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                );
+                              } catch (e) {
+                                print('Error during logout: $e');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('An error occurred. Please try again.'),
+                                  ),
+                                );
+                              }
+                            }
                           },
                           child: Text(
                             'Logout',
@@ -483,6 +599,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+
     );
   }
 }

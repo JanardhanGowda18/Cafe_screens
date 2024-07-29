@@ -37,7 +37,7 @@ class _RegistrationFormState extends State<LoginForm>
     with SingleTickerProviderStateMixin {
   late LoginController _controller;
   final LoginValidation _validation = LoginValidation();
-
+  bool passwordVisible = false;
   @override
   void initState() {
     super.initState();
@@ -204,6 +204,7 @@ class _RegistrationFormState extends State<LoginForm>
                                   ],
                                 ),
                                 SizedBox(height: 16),
+
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -221,22 +222,35 @@ class _RegistrationFormState extends State<LoginForm>
                                         border: Border.all(
                                           color: Colors.black,
                                         ),
-                                        borderRadius:
-                                        BorderRadius.circular(15.0),
+                                        borderRadius: BorderRadius.circular(15.0),
                                       ),
-                                      child: TextFormField(
-                                        controller: passwordController,
-                                        focusNode: passwordFocusNode,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                        ),
-                                        obscureText: true,
-                                        validator: (value) =>
-                                        passwordFocusNode.hasFocus
-                                            ? _validatePassword(value)
-                                            : null,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              controller: passwordController,
+                                              focusNode: passwordFocusNode,
+                                              decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                              ),
+                                              obscureText: !passwordVisible, // Toggle visibility
+                                              validator: (value) =>
+                                              passwordFocusNode.hasFocus ? _validatePassword(value) : null,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                passwordVisible = !passwordVisible;
+                                              });
+                                            },
+                                            child: Icon(
+                                              passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],

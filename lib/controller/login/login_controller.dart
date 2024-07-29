@@ -63,6 +63,8 @@ class LoginController {
       final String emailOrPhone = emailOrPhoneController.text.trim();
       final String password = passwordController.text;
 
+      User? user;
+
       // Check if the input is an email or a phone number
       if (emailOrPhone.contains('@')) {
         // It's an email
@@ -70,6 +72,7 @@ class LoginController {
           email: emailOrPhone,
           password: password,
         );
+        user = FirebaseAuth.instance.currentUser;
       } else {
         // It's a phone number
         // Send verification code
@@ -77,6 +80,7 @@ class LoginController {
           phoneNumber: emailOrPhone,
           verificationCompleted: (PhoneAuthCredential credential) async {
             await FirebaseAuth.instance.signInWithCredential(credential);
+            user = FirebaseAuth.instance.currentUser;
           },
           verificationFailed: (FirebaseAuthException e) {
             print('Verification Failed: $e');
@@ -100,6 +104,11 @@ class LoginController {
       hideLoader(context);
       print('User signed in successfully');
 
+      // Make sure the user is not null before calling _loadUserCartItems
+      if (user != null) {
+        _loadUserCartItems(user!);
+      }
+
       // Navigate to the home page or any other desired screen
       Navigator.pushReplacement(
         context,
@@ -112,7 +121,6 @@ class LoginController {
     }
   }
 
-
   void showLoader(BuildContext context) {
     // Implement your loading indicator show logic here
   }
@@ -123,5 +131,11 @@ class LoginController {
 
   void dispose() {
     _controller.dispose();
+  }
+
+  // Add this method to load user cart items
+  void _loadUserCartItems(User user) {
+    // Implement the logic to load user cart items
+    // You can call the appropriate method from CartItemProvider
   }
 }
