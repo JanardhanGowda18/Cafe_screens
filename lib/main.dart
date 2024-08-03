@@ -22,12 +22,12 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CartItemProvider()),
-        // ... other providers ...
-
         ChangeNotifierProvider(create: (context) => FavoritesProvider()),
         ChangeNotifierProvider(create: (context) => FavoritesProvider2()),
       ],
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false, // Show the debug banner
+
         home: const MyApp(),
       ),
     ),
